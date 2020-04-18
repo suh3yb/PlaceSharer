@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
@@ -9,62 +10,65 @@ import {
 import { useForm } from '../../shared/hooks/form-hook';
 import './PlaceForm.css';
 
-const NewPlace = () => {
+const UpdatePlace = () => {
+  const { placeId } = useParams();
+  const identifiedPlace = DUMMY_PLACES.find(p => p.id === placeId);
+
   const [formState, inputHandler] = useForm(
     {
       title: {
-        value: '',
-        isValid: false,
+        value: identifiedPlace.title,
+        isValid: true,
       },
       description: {
-        value: '',
-        isValid: false,
-      },
-      address: {
-        value: '',
-        isValid: false,
+        value: identifiedPlace.description,
+        isValid: true,
       },
     },
-    false
+    true
   );
 
-  const placeSubmitHandler = event => {
+  const placeUpdateSubmitHandler = event => {
     event.preventDefault();
-    console.log(formState.inputs); // send it to backend
+    console.log(formState.inputs);
   };
 
+  if (!identifiedPlace) {
+    return (
+      <div className="center">
+        <h2>Could not find place.</h2>
+      </div>
+    );
+  }
+
   return (
-    <form className="place-form" onSubmit={placeSubmitHandler}>
+    <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
       <Input
         id="title"
         element="input"
-        type="text"
         label="Title"
+        type="text"
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid title."
         onInput={inputHandler}
+        initialValue={formState.inputs.title.value}
+        initialValid={formState.inputs.title.isValid}
       />
       <Input
         id="description"
         element="textarea"
         label="Description"
         validators={[VALIDATOR_MINLENGTH(5)]}
-        errorText="Please enter a valid description (at least 5 characters)."
+        errorText="Please enter a valid description (min. 5 characters)."
         onInput={inputHandler}
-      />
-      <Input
-        id="address"
-        element="input"
-        label="Address"
-        validators={[VALIDATOR_REQUIRE()]}
-        errorText="Please enter a valid address."
-        onInput={inputHandler}
+        initialValue={formState.inputs.description.value}
+        initialValid={formState.inputs.description.isValid}
       />
       <Button type="submit" disabled={!formState.isValid}>
-        ADD PLACE
+        UPDATE PLACE
       </Button>
     </form>
   );
 };
 
-export default NewPlace;
+export default UpdatePlace;
