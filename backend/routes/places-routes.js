@@ -8,7 +8,7 @@ const {
   createPlace,
   updatePlace,
   deletePlace,
-} = require('../controllers/places-controller');
+} = require('../controllers/places-controllers');
 
 const router = express.Router();
 
