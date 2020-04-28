@@ -3,15 +3,14 @@ import React, { useState, useEffect } from 'react';
 import UsersList from '../components/UsersList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const Users = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState(null);
 
   useEffect(() => {
     const sendRequest = async () => {
-      setIsLoading(true);
       try {
         const response = await fetch('http://localhost:5000/api/users');
         const responseData = await response.json();
@@ -22,7 +21,6 @@ const Users = () => {
       } catch (error) {
         setError(error.message);
       }
-      setIsLoading(false);
     };
     sendRequest();
   }, []);
