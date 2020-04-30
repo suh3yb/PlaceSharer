@@ -65,6 +65,13 @@ const signup = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
+
   const { email, password } = req.body;
 
   let existingUser;
@@ -83,7 +90,10 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({ message: 'Logged in.' });
+  res.status(200).json({
+    message: 'Logged in.',
+    user: existingUser.toObject({ getters: true }),
+  });
 };
 
 exports.getUsers = getUsers;
