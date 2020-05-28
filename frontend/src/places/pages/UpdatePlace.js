@@ -16,7 +16,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceForm.css';
 
 const UpdatePlace = () => {
-  const { userId } = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedPlace, setLoadedPlace] = useState();
   const history = useHistory();
@@ -74,7 +74,7 @@ const UpdatePlace = () => {
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
         }),
-        { 'Content-Type': 'application/json' }
+        { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
       );
       history.push(`/${userId}/places`);
     } catch (error) {

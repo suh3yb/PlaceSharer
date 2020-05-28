@@ -16,7 +16,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceForm.css';
 
 const NewPlace = () => {
-  const { userId } = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const history = useHistory();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler] = useForm(
@@ -51,7 +51,9 @@ const NewPlace = () => {
       formData.append('creator', userId);
       formData.append('image', formState.inputs.image.value);
 
-      await sendRequest('http://localhost:5000/api/places', 'POST', formData);
+      await sendRequest('http://localhost:5000/api/places', 'POST', formData, {
+        Authorization: `Bearer ${token}`,
+      });
       history.push('/');
     } catch (error) {
       console.error(error);

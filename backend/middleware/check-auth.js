@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const HttpError = require('../models/http-error');
 
 const checkAuth = (req, res, next) => {
+  if (req.method === 'OPTIONS') return next();
+
   try {
     // Authorization: 'Bearer TOKEN'
     const token = req.headers.authorization.split(' ')[1];
@@ -16,7 +18,7 @@ const checkAuth = (req, res, next) => {
     const { userId } = jwt.verify(token, 'supersecret_bla_bla_');
     req.userData = { userId };
     next();
-  } catch (error) {
+  } catch (err) {
     const error = new HttpError('Authentication failed.', 401);
     return next(error);
   }
