@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 
@@ -175,12 +177,18 @@ const deletePlace = async (req, res, next) => {
       return next(error);
     }
 
+    const imagePath = place.image;
+
     const session = await mongoose.startSession();
     session.startTransaction();
     await place.remove({ session });
     place.creator.places.pull(place);
     await place.creator.save({ session });
     await session.commitTransaction();
+
+    fs.unlink(imagePath, err => {
+      console.log(err);
+    });
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not delete the place.',
