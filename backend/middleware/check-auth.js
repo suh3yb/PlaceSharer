@@ -15,7 +15,7 @@ const checkAuth = (req, res, next) => {
       throw new Error('Authentication failed.');
     }
 
-    const { userId } = jwt.verify(token, 'supersecret_bla_bla_');
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     req.userData = { userId };
     next();
   } catch (err) {

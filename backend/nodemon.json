@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MAPS_API_KEY": "",
+    "MONGO_DB_URL": "",
+    "JWT_SECRET": ""
+  }
+}
